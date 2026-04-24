@@ -18,7 +18,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@6d653acede28d24f02e3cd41383119e8b1b35921
+        with:
+          toolchain: stable
       - run: cargo check --workspace
 
   clippy:
@@ -26,8 +28,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@6d653acede28d24f02e3cd41383119e8b1b35921
         with:
+          toolchain: stable
           components: clippy
       - run: cargo clippy --workspace --lib -- -D warnings
 
@@ -36,8 +39,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@nightly
+      - uses: dtolnay/rust-toolchain@6d653acede28d24f02e3cd41383119e8b1b35921
         with:
+          toolchain: nightly
           components: rustfmt
       - run: cargo +nightly fmt --all -- --check
 
@@ -46,7 +50,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@6d653acede28d24f02e3cd41383119e8b1b35921
+        with:
+          toolchain: stable
       - run: cargo doc --workspace --lib --no-deps
         env:
           RUSTDOCFLAGS: -D warnings
@@ -60,7 +66,9 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@6d653acede28d24f02e3cd41383119e8b1b35921
+        with:
+          toolchain: stable
       - uses: boundless-xyz/boundless/.github/actions/sccache@main
         with:
           key: Linux-risc0-crypto-test
@@ -111,7 +119,9 @@ jobs:
       pull-requests: write
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@6d653acede28d24f02e3cd41383119e8b1b35921
+        with:
+          toolchain: stable
       - uses: boundless-xyz/boundless/.github/actions/sccache@main
         with:
           key: Linux-risc0-crypto-bench
