@@ -62,7 +62,7 @@ jobs:
       - uses: risc0/cargo-install@b9307573043522ab0d3e3be64a51763b765b52a4
         with:
           crate: cargo-sort
-          version: "1.0"
+          version: "2.1"
       - run: cargo sort --workspace --grouped --check
 
   doc:
