@@ -10,6 +10,8 @@ target/
 
 # Claude Code
 .claude/
+**/CLAUDE.md
+**/AGENTS.md
 
 # Godbolt / assembly inspection
 godbolt.rs
