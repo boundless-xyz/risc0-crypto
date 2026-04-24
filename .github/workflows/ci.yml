@@ -111,10 +111,9 @@ jobs:
 
   bench:
     name: Benchmark
-    runs-on: [self-hosted, prod, Linux, X64, cpu]
+    runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:
-      id-token: write
       contents: write
       pull-requests: write
     steps:
@@ -122,9 +121,6 @@ jobs:
       - uses: dtolnay/rust-toolchain@6d653acede28d24f02e3cd41383119e8b1b35921
         with:
           toolchain: stable
-      - uses: boundless-xyz/boundless/.github/actions/sccache@main
-        with:
-          key: Linux-risc0-crypto-bench
 
       - name: Install rzup
         run: |
@@ -158,6 +154,3 @@ jobs:
           comment-on-alert: true
           comment-always: ${{ github.event_name == 'pull_request' }}
           summary-always: true
-
-      - name: Show sccache stats
-        run: sccache --show-stats
