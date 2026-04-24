@@ -1,16 +1,22 @@
 name: CI
 
 on:
+  merge_group:
   push:
     branches: [main]
   pull_request:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
 
 env:
   CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: full
 
 jobs:
   check:
@@ -59,19 +65,13 @@ jobs:
 
   test:
     name: Guest Test
-    runs-on: [self-hosted, prod, Linux, X64, cpu]
+    runs-on: ubuntu-latest
     timeout-minutes: 60
-    permissions:
-      id-token: write
-      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@6d653acede28d24f02e3cd41383119e8b1b35921
         with:
           toolchain: stable
-      - uses: boundless-xyz/boundless/.github/actions/sccache@main
-        with:
-          key: Linux-risc0-crypto-test
 
       - name: Install rzup
         run: |
@@ -105,9 +105,6 @@ jobs:
 
       - name: Run guest tests
         run: cargo risczero guest test
-
-      - name: Show sccache stats
-        run: sccache --show-stats
 
   bench:
     name: Benchmark
