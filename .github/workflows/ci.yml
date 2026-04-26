@@ -19,16 +19,6 @@ env:
   RUST_BACKTRACE: full
 
 jobs:
-  check:
-    name: Check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@6d653acede28d24f02e3cd41383119e8b1b35921
-        with:
-          toolchain: stable
-      - run: cargo check --workspace
-
   clippy:
     name: Clippy
     runs-on: ubuntu-latest
@@ -38,7 +28,7 @@ jobs:
         with:
           toolchain: stable
           components: clippy
-      - run: cargo clippy --workspace --lib -- -D warnings
+      - run: cargo clippy --workspace --all-targets --tests -- -D warnings
 
   fmt:
     name: Format
@@ -153,7 +143,7 @@ jobs:
           -- --json bench-results.json
 
       - name: Track benchmark results
-        uses: risc0/github-action-benchmark@v1
+        uses: risc0/github-action-benchmark@c3efd4d54319dbc90622069cc273cba59b46abbf
         with:
           name: risc0-crypto benchmarks
           tool: customSmallerIsBetter
