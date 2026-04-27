@@ -1,9 +1,11 @@
 [package]
 name = "risc0-crypto"
-version = "0.1.0"
-edition = "2024"
-license = "Apache-2.0"
 description = "Cryptographic primitives built on risc0-bigint2"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+homepage.workspace = true
+repository.workspace = true
 
 [package.metadata.docs.rs]
 all-features = true
