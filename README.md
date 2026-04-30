@@ -22,6 +22,3 @@ Run locally with `rzup r0vm` installed:
 ```bash
 cargo run --release --manifest-path bench/Cargo.toml
 ```
-
-Live benchmark tracking:
-[risc0-crypto benchmarks](https://wollac.github.io/risc0-crypto/dev/bench/).

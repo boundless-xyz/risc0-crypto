@@ -31,9 +31,10 @@ SKIP_PATHS = [
 ]
 
 
-def check_header(file, expected_year, lines_actual):
-    for expected, actual in zip(PUBLIC_HEADER, lines_actual):
+def check_header(expected_year, lines_actual):
+    for i, expected in enumerate(PUBLIC_HEADER):
         expected = expected.replace("{YEAR}", expected_year)
+        actual = lines_actual[i] if i < len(lines_actual) else ""
         if expected != actual:
             return (expected, actual)
     return None
@@ -44,7 +45,7 @@ def check_file(root, file):
     expected_year = subprocess.check_output(cmd, encoding="UTF-8").strip()
     rel_path = file.relative_to(root)
     lines = file.read_text().splitlines()
-    result = check_header(file, expected_year, lines)
+    result = check_header(expected_year, lines)
     if result:
         print(f"{rel_path}: invalid header!")
         print(f"  expected: {result[0]}")
@@ -59,18 +60,18 @@ def repo_root():
     return Path(subprocess.check_output(cmd, encoding="UTF-8").strip())
 
 
-def tracked_files():
+def tracked_files(root):
     """Yield all file paths tracked by git"""
     cmd = ["git", "ls-tree", "--full-tree", "--name-only", "-r", "HEAD"]
     tree = subprocess.check_output(cmd, encoding="UTF-8").strip()
     for path in tree.splitlines():
-        yield (repo_root() / Path(path)).absolute()
+        yield (root / Path(path)).absolute()
 
 
 def main():
     root = repo_root()
     ret = 0
-    for path in tracked_files():
+    for path in tracked_files(root):
         if path.suffix in EXTENSIONS:
             skip = False
             for path_start in SKIP_PATHS:
