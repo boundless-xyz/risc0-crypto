@@ -17,6 +17,8 @@ defaults:
 env:
   CARGO_TERM_COLOR: always
   RUST_BACKTRACE: full
+  # Bump occasionally to pull in rustfmt/rustdoc improvements; keep within a few months.
+  NIGHTLY: nightly-2026-04-15
 
 jobs:
   clippy:
@@ -37,9 +39,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@6d653acede28d24f02e3cd41383119e8b1b35921
         with:
-          toolchain: nightly
+          toolchain: ${{ env.NIGHTLY }}
           components: rustfmt
-      - run: cargo +nightly fmt --all -- --check
+      - run: cargo +${{ env.NIGHTLY }} fmt --all -- --check
 
   license:
     name: License Check
@@ -77,6 +79,35 @@ jobs:
         with:
           toolchain: stable
       - run: cargo doc --workspace --lib --no-deps
+        env:
+          RUSTDOCFLAGS: -D warnings
+
+  doctest:
+    name: Doc Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@6d653acede28d24f02e3cd41383119e8b1b35921
+        with:
+          toolchain: stable
+      - run: cargo test --doc --workspace
+
+  docs-rs:
+    name: docs.rs simulation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@6d653acede28d24f02e3cd41383119e8b1b35921
+        with:
+          toolchain: ${{ env.NIGHTLY }}
+      - uses: risc0/cargo-install@b9307573043522ab0d3e3be64a51763b765b52a4
+        with:
+          crate: cargo-docs-rs
+          version: "1.0"
+      - run: cargo +${{ env.NIGHTLY }} docs-rs -p risc0-crypto
+        env:
+          RUSTDOCFLAGS: -D warnings
+      - run: cargo +${{ env.NIGHTLY }} docs-rs -p risc0-crypto-evm
         env:
           RUSTDOCFLAGS: -D warnings
 

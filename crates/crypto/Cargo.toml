@@ -1,6 +1,6 @@
 [package]
 name = "risc0-crypto"
-description = "Cryptographic primitives built on risc0-bigint2"
+description = "zkVM-only: cryptographic primitives built on risc0-bigint2"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -9,7 +9,7 @@ repository.workspace = true
 
 [package.metadata.docs.rs]
 all-features = true
-rustdoc-args = ["-Zunstable-options", "--generate-link-to-definition", "--cfg=doc_auto_cfg"]
+rustdoc-args = ["-Zunstable-options", "--generate-link-to-definition", "--cfg=docsrs"]
 
 [dependencies]
 bytemuck = { version = "1.25", features = ["derive"] }

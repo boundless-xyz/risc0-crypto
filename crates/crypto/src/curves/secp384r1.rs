@@ -12,8 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//! The secp384r1 (NIST P-384) curve used in TLS, certificate signing, and high-security
-//! applications.
+//! The secp384r1 (NIST P-384) curve used in TLS and certificate signing.
 //!
 //! - Equation: `y² = x³ - 3x + b`
 //! - Base field: 384-bit
