@@ -1,0 +1,201 @@
+name: CI
+
+on:
+  merge_group:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: full
+  # Bump occasionally to pull in rustfmt/rustdoc improvements; keep within a few months.
+  NIGHTLY: nightly-2026-04-15
+
+jobs:
+  clippy:
+    name: Clippy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@6d653acede28d24f02e3cd41383119e8b1b35921
+        with:
+          toolchain: stable
+          components: clippy
+      - run: cargo clippy --workspace --all-targets -- -D warnings
+
+  fmt:
+    name: Format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@6d653acede28d24f02e3cd41383119e8b1b35921
+        with:
+          toolchain: ${{ env.NIGHTLY }}
+          components: rustfmt
+      - run: cargo +${{ env.NIGHTLY }} fmt --all -- --check
+
+  license:
+    name: License Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history is required by license-check.py
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - run: python license-check.py
+
+  sort:
+    name: Cargo Sort
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@6d653acede28d24f02e3cd41383119e8b1b35921
+        with:
+          toolchain: stable
+      - uses: risc0/cargo-install@b9307573043522ab0d3e3be64a51763b765b52a4
+        with:
+          crate: cargo-sort
+          version: "2.1"
+      - run: cargo sort --workspace --grouped --check
+
+  doc:
+    name: Doc
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@6d653acede28d24f02e3cd41383119e8b1b35921
+        with:
+          toolchain: stable
+      - run: cargo doc --workspace --lib --no-deps
+        env:
+          RUSTDOCFLAGS: -D warnings
+
+  doctest:
+    name: Doc Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@6d653acede28d24f02e3cd41383119e8b1b35921
+        with:
+          toolchain: stable
+      - run: cargo test --doc --workspace
+
+  docs-rs:
+    name: docs.rs simulation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@6d653acede28d24f02e3cd41383119e8b1b35921
+        with:
+          toolchain: ${{ env.NIGHTLY }}
+      - uses: risc0/cargo-install@b9307573043522ab0d3e3be64a51763b765b52a4
+        with:
+          crate: cargo-docs-rs
+          version: "1.0"
+      - run: cargo +${{ env.NIGHTLY }} docs-rs -p risc0-crypto
+        env:
+          RUSTDOCFLAGS: -D warnings
+      - run: cargo +${{ env.NIGHTLY }} docs-rs -p risc0-crypto-evm
+        env:
+          RUSTDOCFLAGS: -D warnings
+
+  test:
+    name: Guest Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@6d653acede28d24f02e3cd41383119e8b1b35921
+        with:
+          toolchain: stable
+
+      - name: Install rzup
+        run: |
+          curl -L https://risczero.com/install | bash
+          echo "$HOME/.risc0/bin" >> "$GITHUB_PATH"
+
+      - name: Install risc0 toolchain
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rzup install rust
+          rzup install cpp
+
+      - name: Cache cargo-risczero
+        id: cache-risczero
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/cargo-risczero
+            ~/.cargo/bin/r0vm
+          key: cargo-risczero-victor-feb12-af1f67c8
+
+      - name: Install cargo-risczero from branch
+        if: steps.cache-risczero.outputs.cache-hit != 'true'
+        run: >
+          cargo install cargo-risczero
+          --git https://github.com/risc0/risc0.git
+          --branch victor/feb12-af1f67c8
+          --features experimental
+          --force
+
+      - name: Run guest tests
+        run: cargo risczero guest test
+
+  bench:
+    name: Benchmark
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@6d653acede28d24f02e3cd41383119e8b1b35921
+        with:
+          toolchain: stable
+
+      - name: Install rzup
+        run: |
+          curl -L https://risczero.com/install | bash
+          echo "$HOME/.risc0/bin" >> "$GITHUB_PATH"
+
+      - name: Install risc0 toolchain
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rzup install rust
+          rzup install cpp
+          rzup install r0vm
+
+      - name: Run benchmarks
+        run: >
+          cargo run --release --locked
+          --manifest-path bench/Cargo.toml
+          -- --json bench-results.json
+
+      - name: Track benchmark results
+        uses: risc0/github-action-benchmark@c3efd4d54319dbc90622069cc273cba59b46abbf
+        with:
+          name: risc0-crypto benchmarks
+          tool: customSmallerIsBetter
+          output-file-path: bench-results.json
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          auto-push: ${{ github.ref == 'refs/heads/main' }}
+          alert-threshold: "101%"
+          fail-on-alert: true
+          comment-on-alert: true
+          comment-always: ${{ github.event_name == 'pull_request' }}
+          summary-always: true
