@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1777899264755,
+  "lastUpdate": 1777902743410,
   "repoUrl": "https://github.com/boundless-xyz/risc0-crypto",
   "entries": {
     "risc0-crypto benchmarks": [
@@ -341,6 +341,165 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/boundless-xyz/risc0-crypto/commit/b344243f4c6d08d1a9efe8d46ebaa9393d02e2f7"
         },
         "date": 1777899264466,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "ecrecover",
+            "value": 119233,
+            "unit": "cycles"
+          },
+          {
+            "name": "eip196/add",
+            "value": 2357,
+            "unit": "cycles"
+          },
+          {
+            "name": "eip196/mul",
+            "value": 71200,
+            "unit": "cycles"
+          },
+          {
+            "name": "eip2537/add",
+            "value": 3207,
+            "unit": "cycles"
+          },
+          {
+            "name": "eip2537/msm_1",
+            "value": 184186,
+            "unit": "cycles"
+          },
+          {
+            "name": "eip2537/msm_128",
+            "value": 17981471,
+            "unit": "cycles"
+          },
+          {
+            "name": "field/secp256r1/add",
+            "value": 85,
+            "unit": "cycles"
+          },
+          {
+            "name": "field/secp256r1/mul",
+            "value": 93,
+            "unit": "cycles"
+          },
+          {
+            "name": "field/secp256r1/inverse",
+            "value": 101,
+            "unit": "cycles"
+          },
+          {
+            "name": "field/secp384r1/add",
+            "value": 152,
+            "unit": "cycles"
+          },
+          {
+            "name": "field/secp384r1/mul",
+            "value": 170,
+            "unit": "cycles"
+          },
+          {
+            "name": "field/secp384r1/inverse",
+            "value": 179,
+            "unit": "cycles"
+          },
+          {
+            "name": "ec/secp256r1/is_on_curve",
+            "value": 355,
+            "unit": "cycles"
+          },
+          {
+            "name": "ec/secp256r1/point_add",
+            "value": 350,
+            "unit": "cycles"
+          },
+          {
+            "name": "ec/secp256r1/scalar_mul",
+            "value": 68230,
+            "unit": "cycles"
+          },
+          {
+            "name": "ec/secp256r1/ecdsa_sign",
+            "value": 67421,
+            "unit": "cycles"
+          },
+          {
+            "name": "ec/secp256r1/ecdsa_verify",
+            "value": 83743,
+            "unit": "cycles"
+          },
+          {
+            "name": "ec/secp256r1/ecdsa_recover",
+            "value": 103904,
+            "unit": "cycles"
+          },
+          {
+            "name": "ec/secp384r1/is_on_curve",
+            "value": 445,
+            "unit": "cycles"
+          },
+          {
+            "name": "ec/secp384r1/point_add",
+            "value": 464,
+            "unit": "cycles"
+          },
+          {
+            "name": "ec/secp384r1/scalar_mul",
+            "value": 107264,
+            "unit": "cycles"
+          },
+          {
+            "name": "ec/secp384r1/ecdsa_sign",
+            "value": 105758,
+            "unit": "cycles"
+          },
+          {
+            "name": "ec/secp384r1/ecdsa_verify",
+            "value": 167583,
+            "unit": "cycles"
+          },
+          {
+            "name": "ec/secp384r1/ecdsa_recover",
+            "value": 227239,
+            "unit": "cycles"
+          },
+          {
+            "name": "modexp/256bit",
+            "value": 26891,
+            "unit": "cycles"
+          },
+          {
+            "name": "modexp/384bit",
+            "value": 49215,
+            "unit": "cycles"
+          },
+          {
+            "name": "modexp/4096bit_e65537",
+            "value": 10370,
+            "unit": "cycles"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "welzwo@gmail.com",
+            "name": "Wolfgang Welz",
+            "username": "Wollac"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "da6cca298767ed08f31eb582ffc80f25793d7e77",
+          "message": "ci: add crates.io trusted-publishing release workflow (#3)",
+          "timestamp": "2026-05-04T15:49:13+02:00",
+          "tree_id": "42fa80f4c93133aa16e61aa1b68c7afb50d122f3",
+          "url": "https://github.com/boundless-xyz/risc0-crypto/commit/da6cca298767ed08f31eb582ffc80f25793d7e77"
+        },
+        "date": 1777902742777,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
