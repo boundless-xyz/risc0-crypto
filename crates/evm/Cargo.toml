@@ -13,7 +13,7 @@ rustdoc-args = ["-Zunstable-options", "--generate-link-to-definition", "--cfg=do
 
 [dependencies]
 alloy-primitives = { version = "1.5", default-features = false, features = ["map"] }
-risc0-crypto = { version = "0.1", path = "../crypto" }
+risc0-crypto = { path = "../crypto", version = "=0.1.0-alpha.0" }
 risc0-zkp = { version = "3.0.4", default-features = false }
 
 [dev-dependencies]

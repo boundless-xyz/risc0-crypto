@@ -4,7 +4,9 @@
 [RISC Zero](https://risczero.com/) guest code only - linking from a host binary fails by design,
 since the primitives call `risc0-bigint2` syscalls that only the R0VM guest runtime defines.
 
-> ⚠️ **This crate has not been independently audited.** See [Security](#security) for details.
+> ⚠️ **Status: unaudited.** This crate has been tested internally but has
+> not been peer-reviewed or audited. Do not use in production or for
+> handling real value. APIs may change before `0.1.0`.
 
 Cryptographic primitives built on [risc0-bigint2](https://crates.io/crates/risc0-bigint2).
 Uses fewer cycles than the patched upstream crates provided by RISC Zero.
