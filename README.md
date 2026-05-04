@@ -1,3 +1,7 @@
+> ⚠️ **Status: unaudited prerelease.** This crate has been tested
+> internally but has not been peer-reviewed or audited. Do not use in
+> production or for handling real value. APIs may change before `0.1.0`.
+
 # risc0-crypto workspace
 
 R0VM-accelerated cryptography for [RISC Zero](https://risczero.com/) guest programs.

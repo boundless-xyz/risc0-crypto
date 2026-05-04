@@ -7,6 +7,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.1.0-rc.1] - 2026-05-04
+
 ### Added
 
 - `risc0-crypto`: zkVM-accelerated cryptographic primitives built on
@@ -22,3 +24,6 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   - `secp256k1_ecrecover`
   - `secp256r1_verify` (EIP-7951)
   - `sha256` (via `risc0-zkp`)
+
+[Unreleased]: https://github.com/boundless-xyz/risc0-crypto/compare/v0.1.0-rc.1...HEAD
+[0.1.0-rc.1]: https://github.com/boundless-xyz/risc0-crypto/releases/tag/v0.1.0-rc.1
